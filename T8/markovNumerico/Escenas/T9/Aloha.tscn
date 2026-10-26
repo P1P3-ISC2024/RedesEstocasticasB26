@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://buc8fc5nnwetq"]
+
+[ext_resource type="Shader" uid="uid://da7tvs2degx6d" path="res://Escenas/T9/Aloha_graf.gdshader" id="1_d5tpm"]
+[ext_resource type="Script" uid="uid://d3lhjn5khyy7s" path="res://Escenas/T9/GraphThroughput.gd" id="2_c6rot"]
+[ext_resource type="Script" uid="uid://y1t6niciochv" path="res://Escenas/T9/movCam3D.gd" id="3_vrlc5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3pkjn"]
+render_priority = 0
+shader = ExtResource("1_d5tpm")
+shader_parameter/altura = true
+shader_parameter/linea = 0.0050000002375
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_7ditd"]
+material = SubResource("ShaderMaterial_3pkjn")
+size = Vector2(1, 1)
+subdivide_width = 100
+subdivide_depth = 100
+
+[sub_resource type="Environment" id="Environment_22af5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bnrv3"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.49411765)
+
+[sub_resource type="SphereMesh" id="SphereMesh_7ditd"]
+material = SubResource("StandardMaterial3D_bnrv3")
+radius = 0.01
+height = 0.02
+radial_segments = 32
+rings = 16
+
+[node name="Aloha" type="Node3D" unique_id=1013458166]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1885443597 node_paths=PackedStringArray("punto")]
+mesh = SubResource("PlaneMesh_7ditd")
+script = ExtResource("2_c6rot")
+rango = Vector2(0.05, 0.9)
+punto = NodePath("../Point")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1102759145 node_paths=PackedStringArray("interes")]
+transform = Transform3D(1, 0, 0, 0, 0.9384563, 0.345398, 0, -0.345398, 0.9384563, 0, 0.7826849, 1.4819431)
+environment = SubResource("Environment_22af5")
+script = ExtResource("3_vrlc5")
+interes = NodePath("../MeshInstance3D")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=997487353]
+transform = Transform3D(1, 0, 0, 0, 0.6305581, 0.77614206, 0, -0.77614206, 0.6305581, 0, 0, 0)
+
+[node name="Point" type="MeshInstance3D" parent="." unique_id=1582416180]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.036004752, 0)
+mesh = SubResource("SphereMesh_7ditd")
