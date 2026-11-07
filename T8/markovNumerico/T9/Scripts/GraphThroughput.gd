@@ -31,12 +31,11 @@ func calcP(i,j,sig,tau):
 
 func createP(sig,tau):
 	var p_ij:float
-	P = Matrix.new(N,N)
-	for i in range(N):
-		for j in range(i,N):	# desde i para solo recorrer N^2/2
+	P = Matrix.new(N+1,N+1)
+	for i in range(N+1):
+		for j in range(N+1):
 			p_ij = calcP(i,j,sig,tau)
 			P.matriz[P.pos(i,j)] = p_ij
-			P.matriz[P.pos(j,i)] = p_ij	# Porque es simetrica.
 
 # Troughput.
 func s(i,sig,tau):
@@ -56,7 +55,7 @@ func s_miu(sig,tau):
 	gauss = GS.new(P)
 	gauss.runGS()
 	# Realizo la esperanza donde PI_i es la distribución...
-	for i in range(N):
+	for i in range(N+1):
 		sum += s(i,sig,tau)*gauss.pi[i]
 	return sum;
 
@@ -94,4 +93,5 @@ func _updateAll():
 func _ready() -> void:
 	_updateAll()
 	print("Mejor valor: ",best)
-	punto.global_position = best + Vector3(0,0.005,0)
+	if(punto!=null):
+		punto.global_position = best + Vector3(0,0.005,0)

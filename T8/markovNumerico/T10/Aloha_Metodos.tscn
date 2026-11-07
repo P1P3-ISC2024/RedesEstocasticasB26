@@ -1,0 +1,143 @@
+[gd_scene format=3 uid="uid://by7use8fjh1s7"]
+
+[ext_resource type="Shader" uid="uid://da7tvs2degx6d" path="res://T9/Scripts/Aloha_graf.gdshader" id="1_3o6py"]
+[ext_resource type="Script" uid="uid://dgqosa6ut0bhe" path="res://T10/Scripts/GraphThroughputSim.gd" id="2_176cs"]
+[ext_resource type="Script" uid="uid://b1vfsv3o2uwns" path="res://T10/Scripts/GraphThroughputWalk.gd" id="2_wdkp5"]
+[ext_resource type="Script" uid="uid://btguvybg81ick" path="res://T10/Scripts/GraphThroughputDM.gd" id="3_nsi5k"]
+[ext_resource type="Script" uid="uid://y1t6niciochv" path="res://T9/Scripts/movCam3D.gd" id="3_qffhn"]
+[ext_resource type="Shader" uid="uid://b3ynkyba6a2cx" path="res://T10/Load.gdshader" id="4_baffg"]
+[ext_resource type="Texture2D" uid="uid://co1fw8nrsiqis" path="res://icon.svg" id="5_nsi5k"]
+[ext_resource type="Script" uid="uid://d3lhjn5khyy7s" path="res://T9/Scripts/GraphThroughput.gd" id="7_rhwqr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8t60k"]
+render_priority = 0
+shader = ExtResource("1_3o6py")
+shader_parameter/altura = true
+shader_parameter/trans = 1.0
+shader_parameter/linea = 0.005
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_7ditd"]
+material = SubResource("ShaderMaterial_8t60k")
+size = Vector2(1, 1)
+subdivide_width = 100
+subdivide_depth = 100
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6yau0"]
+transparency = 1
+albedo_color = Color(0.8627451, 0.4509804, 0.8627451, 0.60784316)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ow4nv"]
+material = SubResource("StandardMaterial3D_6yau0")
+size = Vector2(1, 1)
+subdivide_width = 20
+subdivide_depth = 20
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_71h73"]
+transparency = 1
+albedo_color = Color(0.7411765, 0.7411765, 1, 0.6627451)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wdkp5"]
+material = SubResource("StandardMaterial3D_71h73")
+size = Vector2(1, 1)
+subdivide_width = 20
+subdivide_depth = 20
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dcsrh"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.6431373)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_bnrv3"]
+material = SubResource("StandardMaterial3D_dcsrh")
+size = Vector2(1, 1)
+subdivide_width = 20
+subdivide_depth = 20
+
+[sub_resource type="Environment" id="Environment_22af5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bnrv3"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.49411765)
+
+[sub_resource type="SphereMesh" id="SphereMesh_7ditd"]
+material = SubResource("StandardMaterial3D_bnrv3")
+radius = 0.01
+height = 0.02
+radial_segments = 32
+rings = 16
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7ditd"]
+shader = ExtResource("4_baffg")
+shader_parameter/back = Color(0, 0, 0, 1)
+shader_parameter/full = Color(0.4859258, 0.15074715, 0.48482955, 1)
+shader_parameter/load = 1.0
+shader_parameter/vel = 0.265
+shader_parameter/dist = 1.0
+
+[node name="Aloha" type="Node3D" unique_id=1013458166]
+
+[node name="SIM" type="MeshInstance3D" parent="." unique_id=1885443597 node_paths=PackedStringArray("punto", "barra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+mesh = SubResource("PlaneMesh_7ditd")
+script = ExtResource("2_176cs")
+punto = NodePath("../Point")
+vertex_by_frame = 10
+barra = NodePath("../CanvasLayer/SubViewportContainer/SubViewport/Sprite2D")
+
+[node name="Walk" type="MeshInstance3D" parent="." unique_id=585981618]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+mesh = SubResource("PlaneMesh_ow4nv")
+script = ExtResource("2_wdkp5")
+
+[node name="DM" type="MeshInstance3D" parent="." unique_id=1741372663 node_paths=PackedStringArray("punto")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+mesh = SubResource("PlaneMesh_wdkp5")
+script = ExtResource("3_nsi5k")
+by_frame = false
+rango = Vector2(0.01, 0.9999999)
+punto = NodePath("../Point")
+
+[node name="GS" type="MeshInstance3D" parent="." unique_id=382258512]
+mesh = SubResource("PlaneMesh_bnrv3")
+script = ExtResource("7_rhwqr")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1102759145 node_paths=PackedStringArray("interes")]
+transform = Transform3D(1, 0, 0, 0, 0.9384563, 0.345398, 0, -0.345398, 0.9384563, 0, 0.7826849, 1.4819431)
+environment = SubResource("Environment_22af5")
+script = ExtResource("3_qffhn")
+interes = NodePath("../SIM")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=997487353]
+transform = Transform3D(1, 0, 0, 0, 0.6305581, 0.77614206, 0, -0.77614206, 0.6305581, 0, 0, 0)
+
+[node name="Point" type="MeshInstance3D" parent="." unique_id=1582416180]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.036004752, 0)
+mesh = SubResource("SphereMesh_7ditd")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1202378558]
+unique_name_in_owner = true
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer" unique_id=1769200107]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/SubViewportContainer" unique_id=1046142939]
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/SubViewportContainer/SubViewport" unique_id=264348143]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12078222, 0.0066273366, 0.053256154, 1)
+
+[node name="Camera2D" type="Camera2D" parent="CanvasLayer/SubViewportContainer/SubViewport" unique_id=1490073582]
+position = Vector2(576, 324)
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/SubViewportContainer/SubViewport" unique_id=737319657]
+material = SubResource("ShaderMaterial_7ditd")
+position = Vector2(576, 324)
+scale = Vector2(8.639998, 0.40000063)
+texture = ExtResource("5_nsi5k")
